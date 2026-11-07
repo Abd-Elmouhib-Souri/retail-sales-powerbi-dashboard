@@ -1,0 +1,36 @@
+table 'Country Table'
+	lineageTag: ea8000a7-3c12-4626-83cc-4de5f1d1382a
+
+	column Country
+		dataType: string
+		lineageTag: 226d220c-3378-4965-8a3d-488d029e13e0
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column City
+		dataType: string
+		lineageTag: 4483eab6-59e3-4e93-85d4-e46c565b7a88
+		summarizeBy: none
+		sourceColumn: City
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Country Table' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\projects\retail-sales-powerbi-dashboard\data\sales_data_amz.xlsx"), null, true),
+				    #"Country Table_Sheet" = Source{[Item="Country Table",Kind="Sheet"]}[Data],
+				    #"Type modifié" = Table.TransformColumnTypes(#"Country Table_Sheet",{{"Column1", type text}, {"Column2", type text}}),
+				    #"En-têtes promus" = Table.PromoteHeaders(#"Type modifié", [PromoteAllScalars=true]),
+				    #"Type modifié1" = Table.TransformColumnTypes(#"En-têtes promus",{{"Country", type text}, {"City", type text}}),
+				    #"Doublons supprimés" = Table.Distinct(#"Type modifié1", {"City"})
+				in
+				    #"Doublons supprimés"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

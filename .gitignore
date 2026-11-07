@@ -1,0 +1,6 @@
+# Power BI local settings (per machine, never shared)
+**/.pbi/localSettings.json
+# Power BI data cache, rebuilt on refresh from data/sales_data_amz.xlsx
+**/.pbi/cache.abf
+# Binary copy of the report: the .pbip folder is the versioned source
+*.pbix

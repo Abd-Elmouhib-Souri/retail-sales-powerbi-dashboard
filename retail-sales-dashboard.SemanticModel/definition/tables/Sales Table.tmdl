@@ -1,0 +1,138 @@
+table 'Sales Table'
+	lineageTag: d372aab0-0e81-450c-a3e2-c0115374ff42
+
+	measure Profit(CM) =
+			
+			SUMX(
+			    'Sales Table',
+			    'Sales Table'[Revenu (CC)] - 'Sales Table'[Total Cost(CC)]
+			)
+		lineageTag: 42fb5d2d-ebf0-4c85-a7d3-912ce965a0bc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Transaction Date'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 837a8875-93b1-4ec6-87bc-004a01af0826
+		summarizeBy: none
+		sourceColumn: Transaction Date
+
+		variation Variation
+			isDefault
+			relationship: d6c6e8e5-49fd-4b2f-bced-642e549b6a85
+			defaultHierarchy: LocalDateTable_bd7ac947-5c97-4e0f-bcd9-21e4316e0d70.'Hiérarchie de dates'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Retailer City'
+		dataType: string
+		lineageTag: 917b920b-8197-4f7c-a147-a4e791b737d5
+		summarizeBy: none
+		sourceColumn: Retailer City
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Order method type'
+		dataType: string
+		lineageTag: 08bbb0b6-3ce6-434d-b5ac-4c86409efa8d
+		summarizeBy: none
+		sourceColumn: Order method type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Urgent?
+		dataType: string
+		lineageTag: 0d06ae43-f950-4501-9352-c73bd0d5e2ea
+		summarizeBy: none
+		sourceColumn: Urgent?
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Retailer type'
+		dataType: string
+		lineageTag: 4e13b863-9d39-4922-9836-4ed05115c07c
+		summarizeBy: none
+		sourceColumn: Retailer type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Product Code'
+		dataType: string
+		lineageTag: fcf5e992-1989-4fc8-8e9b-f5a904a6334d
+		summarizeBy: none
+		sourceColumn: Product Code
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Sale Price'
+		dataType: double
+		lineageTag: d911c195-bd39-4664-b9ca-3aefd43f386f
+		summarizeBy: sum
+		sourceColumn: Sale Price
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Quantity Sold'
+		dataType: double
+		lineageTag: 0ca6522b-cd38-4957-8eea-480198d4fdac
+		summarizeBy: sum
+		sourceColumn: Quantity Sold
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Product Cost (CC)' = RELATED('Product Table'[Product Cost])
+		lineageTag: aa83b742-b849-4164-9b5a-c9e030eac765
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Revenu (CC)' = 'Sales Table'[Quantity Sold] * 'Sales Table'[Sale Price]
+		lineageTag: 0fc7bfb6-eb77-46f4-9ca1-4d4b71c58e47
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Cost(CC)' = 'Sales Table'[Quantity Sold]*'Sales Table'[Product Cost (CC)]
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: 8741add8-3970-4b13-9a58-2314a55afa9f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	partition 'Sales Table' = m
+		mode: import
+		source =
+				let
+				    Source = Excel.Workbook(File.Contents("C:\projects\retail-sales-powerbi-dashboard\data\sales_data_amz.xlsx"), null, true),
+				    #"Sales Table_Sheet" = Source{[Item="Sales Table",Kind="Sheet"]}[Data],
+				    #"En-têtes promus" = Table.PromoteHeaders(#"Sales Table_Sheet", [PromoteAllScalars=true]),
+				    #"Type modifié" = Table.TransformColumnTypes(#"En-têtes promus",{{"Sales Data", Int64.Type}, {"Column2", type any}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}, {"Column6", type text}, {"Column7", type text}, {"Column8", type any}, {"Column9", type any}}),
+				    #"Premières lignes supprimées" = Table.Skip(#"Type modifié",1),
+				    #"Premières lignes supprimées1" = Table.Skip(#"Premières lignes supprimées",1),
+				    #"En-têtes promus1" = Table.PromoteHeaders(#"Premières lignes supprimées1", [PromoteAllScalars=true]),
+				    #"Type modifié1" = Table.TransformColumnTypes(#"En-têtes promus1",{{"Column1", type number}, {"Trans Date", type date}, {"RetCity", type text}, {"Order method type", type text}, {"Urgent?", type text}, {"Retailer type", type text}, {"Product Code", type text}, {"Value", type number}, {"Quantity Sold", Int64.Type}}),
+				    #"Colonnes supprimées" = Table.RemoveColumns(#"Type modifié1",{"Column1"}),
+				    #"Lignes vides supprimées" = Table.SelectRows(#"Colonnes supprimées", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Colonnes renommées" = Table.RenameColumns(#"Lignes vides supprimées",{{"Trans Date", "Transaction Date"}, {"RetCity", "Retailer City"}, {"Value", "Sale Price"}}),
+				    #"Valeur remplacée" = Table.ReplaceValue(#"Colonnes renommées",null,0,Replacer.ReplaceValue,{"Quantity Sold"}),
+				    #"Erreurs supprimées" = Table.RemoveRowsWithErrors(#"Valeur remplacée", {"Quantity Sold"})
+				in
+				    #"Erreurs supprimées"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

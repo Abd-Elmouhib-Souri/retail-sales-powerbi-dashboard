@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "retail-sales-dashboard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "bc15d741-afc5-4137-b5e3-367f513e5683"
+  }
+}

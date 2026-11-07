@@ -1,0 +1,165 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "8a7e52a436099e2bc355",
+  "position": {
+    "x": 657.33199598796386,
+    "y": 310.73876173976475,
+    "z": 1000,
+    "height": 245.00556214096835,
+    "width": 357.05078872982585,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "areaChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Sales Table"
+                            }
+                          },
+                          "Name": "Variation",
+                          "Property": "Transaction Date"
+                        }
+                      },
+                      "Hierarchy": "Hiérarchie de dates"
+                    }
+                  },
+                  "Level": "Année"
+                }
+              },
+              "queryRef": "Sales Table.Transaction Date.Variation.Hiérarchie de dates.Année",
+              "nativeQueryRef": "Transaction Date Année",
+              "active": true
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Sales Table"
+                            }
+                          },
+                          "Name": "Variation",
+                          "Property": "Transaction Date"
+                        }
+                      },
+                      "Hierarchy": "Hiérarchie de dates"
+                    }
+                  },
+                  "Level": "Trimestre"
+                }
+              },
+              "queryRef": "Sales Table.Transaction Date.Variation.Hiérarchie de dates.Trimestre",
+              "nativeQueryRef": "Transaction Date Trimestre",
+              "active": false
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Sales Table"
+                            }
+                          },
+                          "Name": "Variation",
+                          "Property": "Transaction Date"
+                        }
+                      },
+                      "Hierarchy": "Hiérarchie de dates"
+                    }
+                  },
+                  "Level": "Mois"
+                }
+              },
+              "queryRef": "Sales Table.Transaction Date.Variation.Hiérarchie de dates.Mois",
+              "nativeQueryRef": "Transaction Date Mois",
+              "active": false
+            },
+            {
+              "field": {
+                "HierarchyLevel": {
+                  "Expression": {
+                    "Hierarchy": {
+                      "Expression": {
+                        "PropertyVariationSource": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "Sales Table"
+                            }
+                          },
+                          "Name": "Variation",
+                          "Property": "Transaction Date"
+                        }
+                      },
+                      "Hierarchy": "Hiérarchie de dates"
+                    }
+                  },
+                  "Level": "Jour"
+                }
+              },
+              "queryRef": "Sales Table.Transaction Date.Variation.Hiérarchie de dates.Jour",
+              "nativeQueryRef": "Transaction Date Jour",
+              "active": false
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Sales Table"
+                        }
+                      },
+                      "Property": "Revenu (CC)"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(Sales Table.Revenu (CC))",
+              "nativeQueryRef": "Somme de Revenu (CC)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Sales Table"
+                    }
+                  },
+                  "Property": "Profit(CM)"
+                }
+              },
+              "queryRef": "Sales Table.Profit(CM)",
+              "nativeQueryRef": "Profit(CM)"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

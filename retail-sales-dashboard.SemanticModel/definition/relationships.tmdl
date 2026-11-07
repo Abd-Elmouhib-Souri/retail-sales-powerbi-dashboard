@@ -1,0 +1,9 @@
+relationship d6c6e8e5-49fd-4b2f-bced-642e549b6a85
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Sales Table'.'Transaction Date'
+	toColumn: LocalDateTable_bd7ac947-5c97-4e0f-bcd9-21e4316e0d70.Date
+
+relationship AutoDetected_11b896d0-1cb7-43ef-bc16-fe9e37722198
+	fromColumn: 'Sales Table'.'Product Code'
+	toColumn: 'Product Table'.'Product Code'
+
